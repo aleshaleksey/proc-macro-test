@@ -11,9 +11,16 @@ pub enum MyEnum {
     No,
 }
 
+#[derive(Debug, Default, PartialEq, Clone)]
+pub struct Monster {
+    pub name: String,
+    pub size: usize,
+    pub evil: bool,
+}
+
 #[derive(IntoStruct, Debug, PartialEq, Clone)]
 pub enum StupidEnum {
-    Monster(String, usize, bool),
+    Monster(Monster),
     AllTheNumbers(
         u8,
         u16,
@@ -66,9 +73,7 @@ mod test_into_struct {
 
         let x = StupidEnumStruct {
             monster_set: false,
-            monster_0: String::default(),
-            monster_1: usize::default(),
-            monster_2: false,
+            monster_0: Monster::default(),
             allthenumbers_set: false,
             allthenumbers_0: 0u8,
             allthenumbers_1: 0u16,
@@ -95,9 +100,7 @@ mod test_into_struct {
 
         let x = StupidEnumStruct {
             monster_set: false,
-            monster_0: String::default(),
-            monster_1: usize::default(),
-            monster_2: false,
+            monster_0: Monster::default(),
             allthenumbers_set: true,
             allthenumbers_0: 0u8,
             allthenumbers_1: 1u16,
@@ -111,6 +114,41 @@ mod test_into_struct {
             allthenumbers_9: -5i128,
             allthenumbers_10: -999isize,
             allthenumbers_11: 999usize,
+            yes_set: false,
+            yes_0: String::default(),
+            no: false,
+        };
+        assert_eq!(a.as_struct(), x);
+    }
+
+    #[test]
+    fn test5() {
+        let a = StupidEnum::Monster(Monster {
+            name: String::from("Bob"),
+            size: 9000,
+            evil: true,
+        });
+
+        let x = StupidEnumStruct {
+            monster_set: true,
+            monster_0: Monster {
+                name: String::from("Bob"),
+                size: 9000,
+                evil: true,
+            },
+            allthenumbers_set: false,
+            allthenumbers_0: 0u8,
+            allthenumbers_1: 0u16,
+            allthenumbers_2: 0u32,
+            allthenumbers_3: 0u64,
+            allthenumbers_4: 0u128,
+            allthenumbers_5: 0i8,
+            allthenumbers_6: 0i16,
+            allthenumbers_7: 0i32,
+            allthenumbers_8: 0i64,
+            allthenumbers_9: 0i128,
+            allthenumbers_10: 0isize,
+            allthenumbers_11: 0usize,
             yes_set: false,
             yes_0: String::default(),
             no: false,
